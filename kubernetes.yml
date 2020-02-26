@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: preference
+  labels:
+    app: preference
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: preference
+  template:
+    metadata:
+      labels:
+        app: preference
+    spec:
+      containers:
+        - name: preference
+          image: gcr.io/cirrus-initial-project/preference:latest
+          ports:
+            - containerPort: 8080
+          imagePullPolicy: Always
