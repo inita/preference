@@ -53,7 +53,7 @@ public class PreferencesController {
     }
 
     @RequestMapping("/")
-    public ResponseEntity<?> getPreferences(@RequestHeader(value = "Accept-Language") String language) {
+    public ResponseEntity<?> getPreferences() {
         try {
             ResponseEntity<String> responseEntity = restTemplate.getForEntity(remoteURL, String.class);
             String response = responseEntity.getBody();
