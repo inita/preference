@@ -9,6 +9,10 @@ import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDate;
+import java.util.Date;
+import java.util.Random;
+
 @RestController
 public class PreferencesController {
 
@@ -55,9 +59,19 @@ public class PreferencesController {
     @RequestMapping("/")
     public ResponseEntity<?> getPreferences() {
         try {
-            ResponseEntity<String> responseEntity = restTemplate.getForEntity(remoteURL, String.class);
-            String response = responseEntity.getBody();
-            return ResponseEntity.ok(String.format(RESPONSE_STRING_FORMAT, response.trim()));
+            ResponseEntity<Recommendation> responseEntity = restTemplate.getForEntity(remoteURL, Recommendation.class);
+            Recommendation response = responseEntity.getBody();
+
+            Preference preference = new Preference();
+            Random rand = new Random();
+            Integer id = rand.nextInt(1000000);
+            preference.setId(id);
+            boolean isActive = id % 2 == 0 ? Boolean.TRUE: Boolean.FALSE;
+            preference.setActive(isActive);
+            preference.setComment(response.getComment());
+            preference.setLastUpdated(LocalDate.now().toString());
+
+            return ResponseEntity.ok(String.format(RESPONSE_STRING_FORMAT, preference));
         } catch (HttpStatusCodeException ex) {
             logger.warn("Exception trying to get the response from recommendation service.", ex);
             return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
