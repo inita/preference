@@ -64,9 +64,9 @@ public class PreferencesController {
 
             Preference preference = new Preference();
             Random rand = new Random();
-            Long id = rand.nextLong();
+            Integer id = rand.nextInt(1000000);
             preference.setId(id);
-            preference.setComment(recommendation.getComment());
+            preference.setComment("user recommendation");
             preference.setDate(LocalDate.now().toString());
             preference.setRecommendation(recommendation);
 
