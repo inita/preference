@@ -60,16 +60,15 @@ public class PreferencesController {
     public ResponseEntity<Preference> getPreferences() {
         try {
             ResponseEntity<Recommendation> responseEntity = restTemplate.getForEntity(remoteURL, Recommendation.class);
-            Recommendation response = responseEntity.getBody();
+            Recommendation recommendation = responseEntity.getBody();
 
             Preference preference = new Preference();
             Random rand = new Random();
-            Integer id = rand.nextInt(1000000);
+            Long id = rand.nextLong();
             preference.setId(id);
-            boolean isActive = id % 2 == 0 ? Boolean.TRUE: Boolean.FALSE;
-            preference.setActive(isActive);
-            preference.setComment(response.getComment());
-            preference.setLastUpdated(LocalDate.now().toString());
+            preference.setComment(recommendation.getComment());
+            preference.setDate(LocalDate.now().toString());
+            preference.setRecommendation(recommendation);
 
             return ResponseEntity.ok(preference);
         } catch (HttpStatusCodeException ex) {
