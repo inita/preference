@@ -57,7 +57,7 @@ public class PreferencesController {
     }
 
     @RequestMapping("/")
-    public ResponseEntity<?> getPreferences() {
+    public ResponseEntity getPreferences() {
         try {
             ResponseEntity<Recommendation> responseEntity = restTemplate.getForEntity(remoteURL, Recommendation.class);
             Recommendation response = responseEntity.getBody();
