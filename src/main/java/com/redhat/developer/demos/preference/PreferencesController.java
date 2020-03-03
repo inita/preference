@@ -57,7 +57,7 @@ public class PreferencesController {
     }
 
     @RequestMapping("/")
-    public ResponseEntity getPreferences() {
+    public ResponseEntity<Preference> getPreferences() {
         try {
             ResponseEntity<Recommendation> responseEntity = restTemplate.getForEntity(remoteURL, Recommendation.class);
             Recommendation response = responseEntity.getBody();
@@ -71,16 +71,13 @@ public class PreferencesController {
             preference.setComment(response.getComment());
             preference.setLastUpdated(LocalDate.now().toString());
 
-            return ResponseEntity.ok(String.format(RESPONSE_STRING_FORMAT, preference));
+            return ResponseEntity.ok(preference);
         } catch (HttpStatusCodeException ex) {
             logger.warn("Exception trying to get the response from recommendation service.", ex);
-            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
-                    .body(String.format(RESPONSE_STRING_FORMAT,
-                            String.format("%d %s", ex.getRawStatusCode(), createHttpErrorResponseString(ex))));
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
         } catch (RestClientException ex) {
             logger.warn("Exception trying to get the response from recommendation service.", ex);
-            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
-                    .body(String.format(RESPONSE_STRING_FORMAT, ex.getMessage()));
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
     }
 
